@@ -11,7 +11,9 @@ class Paddle(Turtle):
         self.shapesize(stretch_wid=5, stretch_len=1)
 
     def go_up(self):
-        self.goto(x=self.xcor(), y=self.ycor() + 20)
+        if self.ycor() < 250:
+            self.goto(x=self.xcor(), y=self.ycor() + 20)
 
     def go_down(self):
-        self.goto(x=self.xcor(), y=self.ycor() - 20)
+        if self.ycor() > -250:
+            self.goto(x=self.xcor(), y=self.ycor() - 20)
