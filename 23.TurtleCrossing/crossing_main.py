@@ -10,7 +10,7 @@ screen.setup(width=600, height=600)
 screen.title("Turtle Crossing")
 screen.tracer(0)
 
-difficulty_level = screen.numinput(title="Difficulty", prompt="Choose difficulty level from 1 to 5: ")
+difficulty_level = screen.numinput(title="Difficulty", prompt="Choose difficulty level. Type any integer: ")
 
 player = PlayerTurtle()
 scoreboard = Scoreboard(difficulty_level)
@@ -25,7 +25,7 @@ iteration = 0
 is_game_on = True
 while is_game_on:
     screen.update()
-    time.sleep(0.1)
+    time.sleep(0.1 * 0.9 ** scoreboard.level)
     for i in cars:
         cars[i].forward(20)
         # Check if car crashed
@@ -37,7 +37,7 @@ while is_game_on:
             cars[i].hideturtle()
             cars_to_remove.append(i)
     # Go to next level
-    if player.ycor() > 280:
+    if player.ycor() > 250:
         player.next_level()
         scoreboard.update_scoreboard()
     # Add new car
