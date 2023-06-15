@@ -8,7 +8,6 @@ for color in colorgram.extract("hirst_painting.jpeg", 40):
 
 screen = Screen()
 screen.colormode(255)
-screen.exitonclick()
 
 jimmy = Turtle()
 jimmy.shape("square")
@@ -31,3 +30,6 @@ for _ in range(10):
     jimmy.forward(500)
     jimmy.left(180)
     jimmy.pendown()
+
+screen.exitonclick()
+
