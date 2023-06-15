@@ -9,14 +9,11 @@
 
 with open("./Input/Names/invited_names.txt") as names_file:
     names = names_file.readlines()
-for i in range(len(names)):
-    names[i] = names[i].strip("\n")
 
 with open("./Input/Letters/starting_letter.txt") as letter:
     template_text = letter.read()
 
-# mails_to_send = []
 for name in names:
-    # mails_to_send.append(template_text.replace("[name]", name.strip("\n")))
-    with open(f"./Output/ReadyToSend/mail_for_{name}.txt", "w") as file:
-        file.write(template_text.replace("[name]", name.strip("\n")))
+    stripped_name = name.strip("\n")
+    with open(f"./Output/ReadyToSend/mail_for_{stripped_name}.txt", "w") as file:
+        file.write(template_text.replace("[name]", stripped_name))
