@@ -25,7 +25,7 @@ iteration = 0
 is_game_on = True
 while is_game_on:
     screen.update()
-    time.sleep(0.1 * 0.9 ** scoreboard.level)
+    time.sleep(0.1 * 0.9 ** (scoreboard.level - 1))
     for i in cars:
         cars[i].forward(20)
         # Check if car crashed
