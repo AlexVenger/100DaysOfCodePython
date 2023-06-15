@@ -4,10 +4,13 @@ MOVE_DISTANCE = 20
 
 
 class Snake:
-    snake_pieces = [Turtle(), Turtle(), Turtle()]
-    head = snake_pieces[0]
-
     def __init__(self):
+        self.snake_pieces = []
+        self.create_snake()
+        self.head = self.snake_pieces[0]
+
+    def create_snake(self):
+        self.snake_pieces = [Turtle(), Turtle(), Turtle()]
         x = 0
         for piece in self.snake_pieces:
             piece.penup()
@@ -50,3 +53,10 @@ class Snake:
 
     def grow(self):
         self.add_piece(self.snake_pieces[-1].position())
+
+    def restart(self):
+        for piece in self.snake_pieces:
+            piece.hideturtle()
+        self.snake_pieces.clear()
+        self.create_snake()
+        self.head = self.snake_pieces[0]

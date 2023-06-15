@@ -19,7 +19,7 @@ cars_to_remove = []
 cars = {1: Car()}
 
 screen.listen()
-screen.onkey(key="Up", fun=player.move)
+screen.onkeypress(key="Up", fun=player.move)
 
 iteration = 0
 is_game_on = True

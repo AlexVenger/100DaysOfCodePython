@@ -19,6 +19,7 @@ screen.onkey(key="Up", fun=snake.up)
 screen.onkey(key="Down", fun=snake.down)
 screen.onkey(key="Left", fun=snake.left)
 screen.onkey(key="Right", fun=snake.right)
+screen.onkey(key="space", fun=scoreboard.restart)
 
 screen.update()
 
@@ -34,12 +35,12 @@ while is_game_on:
         snake.grow()
 
     if abs(snake.head.xcor()) > 280 or abs(snake.head.ycor()) > 280:
-        is_game_on = False
-        scoreboard.game_over()
+        scoreboard.restart()
+        snake.restart()
 
     for piece in snake.snake_pieces[1:]:
         if snake.head.distance(piece) < 10:
-            is_game_on = False
-            scoreboard.game_over()
+            scoreboard.restart()
+            snake.restart()
 
 screen.exitonclick()
