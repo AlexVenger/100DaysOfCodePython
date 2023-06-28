@@ -1,5 +1,4 @@
 import tkinter
-import turtle
 from PIL import Image, ImageTk
 import random
 
