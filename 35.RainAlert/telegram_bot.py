@@ -15,6 +15,10 @@ Press Ctrl-C on the command line or send a signal to the process to stop the
 bot.
 """
 
+import asyncio
+import datetime
+
+import aioschedule
 import json
 import logging
 import requests
@@ -67,7 +71,7 @@ def rain_warning(city_country):
     data_list = f_data["list"]
     for f_data in data_list:
         for weather_data in f_data["weather"]:
-            if weather_data["id"] < 700:
+            if weather_data["id"] > 700:
                 return f"Umbrella situation in {f_city}, {f_country}"
 
 
@@ -143,6 +147,20 @@ async def save_input(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
     last_command = ""
 
 
+async def schedule_task(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    user = update.effective_user
+
+    async def check_for_rain(cont):
+        if "country" in users[user].keys():
+            rain = rain_warning(f"{users[user]['city']},{users[user]['country']}")
+        else:
+            rain = rain_warning(f"{users[user]['city']}")
+        if rain is not None:
+            await cont.bot.send_message(chat_id=users[user]["id"], text=rain)
+
+    context.job_queue.run_repeating(check_for_rain, interval=10, first=datetime.time(hour=7, minute=00, second=00))
+
+
 def main() -> None:
     """Start the bot."""
     # Create the Application and pass it your bot's token.
@@ -151,6 +169,7 @@ def main() -> None:
     # on different commands - answer in Telegram
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help_command))
+    application.add_handler(CommandHandler("auto", schedule_task))
 
     application.add_handler(CommandHandler("city", city))
     application.add_handler(CommandHandler("country", country))
