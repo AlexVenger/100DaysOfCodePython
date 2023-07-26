@@ -15,10 +15,7 @@ Press Ctrl-C on the command line or send a signal to the process to stop the
 bot.
 """
 
-import asyncio
 import datetime
-
-import aioschedule
 import json
 import logging
 import requests
@@ -71,7 +68,7 @@ def rain_warning(city_country):
     data_list = f_data["list"]
     for f_data in data_list:
         for weather_data in f_data["weather"]:
-            if weather_data["id"] > 700:
+            if weather_data["id"] < 700:
                 return f"Umbrella situation in {f_city}, {f_country}"
 
 

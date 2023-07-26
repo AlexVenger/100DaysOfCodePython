@@ -20,8 +20,8 @@ def send_to_telegram(message):
 
 url = "https://api.openweathermap.org/data/2.5/forecast"
 params = {
-    "lat": -34.901112,
-    "lon": -56.164532,
+    "lat": 40.409264,
+    "lon": 49.867092,
     "appid": api_key
 }
 response = requests.get(url, params)
