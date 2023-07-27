@@ -10,7 +10,7 @@ with open("pixela_data.json") as pixela_data:
 pixela_url = "https://pixe.la/v1/users"
 token_header = {"X-USER-TOKEN": token}
 
-# Dictionary of colors with translation just to make life a little bit easier
+# Dictionary of colors with translation just to make life a little easier
 colors = {
 	"green": "shibafu",
 	"red": "momiji",
@@ -72,11 +72,11 @@ def delete_pixel(graph_id: str, date: str):
 # 	timezone="Asia/Baku"
 # )
 
-# add_pixel(
-# 	graph_id="graph1",
-# 	date=datetime.date.today().strftime("%Y%m%d"),
-# 	quantity="500"
-# )
+add_pixel(
+	graph_id="graph1",
+	date=datetime.date.today().strftime("%Y%m%d"),
+	quantity="53"
+)
 
 # update_pixel(
 # 	graph_id="graph1",
