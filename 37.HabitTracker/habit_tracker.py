@@ -74,8 +74,8 @@ def delete_pixel(graph_id: str, date: str):
 
 add_pixel(
 	graph_id="graph1",
-	date=datetime.date.today().strftime("%Y%m%d"),
-	quantity="53"
+	date=(datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y%m%d"),
+	quantity="46"
 )
 
 # update_pixel(
