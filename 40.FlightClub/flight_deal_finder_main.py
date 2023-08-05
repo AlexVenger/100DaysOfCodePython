@@ -17,10 +17,13 @@ with open("credentials.json") as credentials:
     sheety_users = credential_data["sheety_users"]
     bot_key = credential_data["bot_key"]
     user_id = credential_data["user_id"]
+    email = credential_data["email"]
+    password = credential_data["password"]
 
-manager = DataManager(sheety_token, sheety_username, sheety_project_name, sheety_prices)
-notifier = NotificationManager(bot_key, user_id)
+manager = DataManager(sheety_token, sheety_username, sheety_project_name, sheety_prices, sheety_users)
+notifier = NotificationManager(bot_key, user_id, email, password)
 data = FlightData(tequila_key, manager)
 search = FlightSearch(tequila_key, manager, notifier)
+manager.get_emails()
 data.set_iata_codes()
 search.search_tickets()

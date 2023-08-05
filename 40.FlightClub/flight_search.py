@@ -1,3 +1,5 @@
+from pprint import pprint
+
 import requests
 import datetime
 
@@ -36,10 +38,9 @@ class FlightSearch:
         data = tickets.json()["data"]
         date_format = "%Y-%m-%dT%H:%M:%S.%fZ"
         flight_prices = {}
-        notifications = {}
+        notifications = []
         for datum in data:
-            flight_prices[datum["cityCodeTo"]] = datum["price"]
-            notifications[datum["cityCodeTo"]] = {
+            notification = {
                 "price": datum["price"],
                 "dep_city": datum["cityFrom"],
                 "dep_airport": datum["flyFrom"],
@@ -48,20 +49,17 @@ class FlightSearch:
                 "from_date": datetime.datetime.strptime(datum["route"][0]["local_departure"], date_format).date(),
                 "to_date": datetime.datetime.strptime(datum["route"][-1]["local_arrival"], date_format).date()
             }
-        for row in rows:
-            try:
-                if row["lowestPrice"] > flight_prices[row["iataCode"]]:
-                    notification = notifications[row["iataCode"]]
-                    self.data_manager.edit_row(
-                        row["city"], row["iataCode"], flight_prices[row["iataCode"]], row["id"])
-                    self.notification_manager.cheapest_flight_alert(
-                        price=notification["price"],
-                        dep_city=notification["dep_city"],
-                        dep_airport=notification["dep_airport"],
-                        arr_city=notification["arr_city"],
-                        arr_airport=notification["arr_airport"],
-                        from_date=notification["from_date"],
-                        to_date=notification["to_date"]
-                    )
-            except KeyError:
-                continue
+            flight_prices[datum["cityCodeTo"]] = datum["price"]
+            for row in rows:
+                try:
+                    if row["iataCode"] == datum["cityCodeTo"] and row["lowestPrice"] > flight_prices[row["iataCode"]]:
+                        self.data_manager.edit_row(
+                            row["city"], row["iataCode"], flight_prices[row["iataCode"]], row["id"])
+                        notifications.append(notification)
+                except KeyError as e:
+                    print(e)
+        emails = self.data_manager.get_emails()
+        self.notification_manager.send_notification(
+            notifications=notifications,
+            emails=emails
+        )

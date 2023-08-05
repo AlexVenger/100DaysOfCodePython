@@ -3,7 +3,7 @@ import requests
 
 class FlightData:
     # This class is responsible for talking to the Flight Search API.
-    def __init__(self, key, manager, stop_overs=0, via_city=""):
+    def __init__(self, key, manager):
         self.key = key
         self.url = "https://api.tequila.kiwi.com"
         self.headers = {
@@ -11,8 +11,6 @@ class FlightData:
             "accept": "application/json"
         }
         self.data_manager = manager
-        self.stop_overs = stop_overs
-        self.via_city = via_city
 
     def set_iata_codes(self):
         url = self.url + "/locations/query"
