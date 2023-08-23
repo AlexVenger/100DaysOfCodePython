@@ -4,9 +4,10 @@ import requests
 
 app = Flask(__name__)
 
-blogs_url = "https://api.npoint.io/c790b4d5cab58020d391"
+blogs_url = "https://api.npoint.io/5deaf41b4f8078c817e6"
 blogs = requests.get(blogs_url)
 posts = blogs.json()
+print(posts)
 
 
 @app.route("/")
