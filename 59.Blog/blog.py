@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request
 import requests
 import json
 import smtplib
@@ -39,10 +39,10 @@ def contact():
     if request.method == "GET":
         return render_template("contact.html")
     else:
-        name = request.form["name"]
+        name = request.form["name"].encode()
         email = request.form["email"]
         phone = request.form["phone"]
-        message = request.form["message"]
+        message = request.form["message"].encode()
 
         with smtplib.SMTP("smtp.gmail.com", port=587) as connection:
             connection.starttls()
@@ -53,7 +53,7 @@ def contact():
                 msg=f"Subject: Contact with {name}\n\n{message}\nEmail: {email}\nPhone: {phone}"
             )
 
-        return jsonify(message="success")
+        return "<h1>Your message was sent successfully!</h1>"
 
 
 if __name__ == "__main__":

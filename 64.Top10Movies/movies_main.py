@@ -3,7 +3,7 @@ from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 import requests
 import json
-from edit_form import create_edit_form
+from edit_form import EditForm
 from add_movie_form import AddMovieForm
 
 MOVIES_URL = "https://api.themoviedb.org/3/search/movie"
@@ -25,9 +25,9 @@ class Movie(db.Model):
     title = db.Column(db.String, unique=True, nullable=False)
     year = db.Column(db.Integer, nullable=False)
     description = db.Column(db.String, nullable=False)
-    rating = db.Column(db.Float, nullable=False)
-    ranking = db.Column(db.Integer, nullable=False)
-    review = db.Column(db.String, nullable=False)
+    rating = db.Column(db.Float)
+    ranking = db.Column(db.Integer)
+    review = db.Column(db.String)
     img_url = db.Column(db.String, nullable=False)
 
 
@@ -37,6 +37,7 @@ with app.app_context():
 
 @app.route("/")
 def home():
+    rank_movies()
     movies = db.session.execute(db.select(Movie).order_by(Movie.ranking)).scalars()
     return render_template("index.html", movies=movies)
 
@@ -44,7 +45,7 @@ def home():
 @app.route("/edit/<int:movie_id>", methods=["GET", "POST"])
 def edit(movie_id):
     movie = db.session.execute(db.select(Movie).where(Movie.id == movie_id)).scalar()
-    form = create_edit_form(movie.ranking)
+    form = EditForm()
     if form.validate_on_submit():
         movie.rating = form.rating.data
         if form.review.data is not None and form.review.data != "":
@@ -83,14 +84,20 @@ def select(movie_id):
         title=movie_info["original_title"],
         description=movie_info["overview"],
         year=int(movie_info["release_date"][0:4]),
-        img_url=f"https://image.tmdb.org/t/p/w500/{movie_info['poster_path']}",
-        rating=0,
-        review="",
-        ranking=10
+        img_url=f"https://image.tmdb.org/t/p/w500/{movie_info['poster_path']}"
     )
     db.session.add(movie)
     db.session.commit()
     return redirect(f"/edit/{movie.id}")
+
+
+def rank_movies():
+    movies = db.session.execute(db.select(Movie).order_by(Movie.rating.desc())).scalars()
+    i = 1
+    for movie in movies:
+        movie.ranking = i
+        i += 1
+    db.session.commit()
 
 
 if __name__ == '__main__':
