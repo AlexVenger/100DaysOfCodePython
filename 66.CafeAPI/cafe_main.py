@@ -2,6 +2,7 @@ from flask import Flask, jsonify, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql.expression import func
 from util import cafe_to_dict, cafes_to_list
+import requests
 
 app = Flask(__name__)
 
@@ -53,7 +54,14 @@ def search():
         location = request.args.get("loc")
         cafes = db.session.execute(db.select(Cafe).where(Cafe.location == location).order_by(Cafe.id)).scalars()
         cafe_list = cafes_to_list(cafes)
-        return jsonify(cafe_list)
+        if len(cafe_list) > 0:
+            return jsonify(cafe_list)
+        else:
+            return jsonify({
+                "error": {
+                    "Not Found": "Sorry, we don't have a cafe at that location."
+                }
+            })
     else:
         return jsonify({
             "error": {
@@ -91,6 +99,29 @@ def add():
                 "failure": "Required data is missing!"
             }
         })
+
+
+@app.route("/update-price/<cafe_id>", methods=["PATCH"])
+def update_price(cafe_id):
+    cafe_to_update = db.get_or_404(Cafe, cafe_id, description="There is no cafe with such id")
+    cafe_to_update.coffee_price = request.args.get("price")
+    db.session.commit()
+    return jsonify({
+        "success": "Price has been updated successfully!"
+    })
+
+
+@app.route("/delete/<cafe_id>", methods=["DELETE"])
+def delete(cafe_id):
+    if "api_token" in request.args.keys() and request.args.get("api_token") == "SusAmogus":
+        cafe = db.get_or_404(Cafe, cafe_id, description="There is no cafe with such id")
+        db.session.delete(cafe)
+        db.session.commit()
+        return jsonify({
+            "success": "Cafe has been removed successfully!"
+        })
+    else:
+        return jsonify(error={"Forbidden": "You have no access to delete a cafe"}), 403
 
 
 if __name__ == '__main__':
