@@ -1,6 +1,7 @@
 {% extends "base.html" %} {% block content %}
 
 <div class="box">
+  {% if not current_user.is_authenticated  %}
   <h1>Flask Authentication</h1>
   <!-- TODO: Hide the Login/Registration buttons for logged-in users -->
   <a href="{{ url_for('login') }}" class="btn btn-primary btn-block btn-large"
@@ -11,6 +12,9 @@
     class="btn btn-secondary btn-block btn-large"
     >Register</a
   >
+  {% else %}
+  <h1>You're already logged in</h1>
+  {% endif %}
 </div>
 
 {% endblock %}
